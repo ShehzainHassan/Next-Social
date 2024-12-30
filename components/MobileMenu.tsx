@@ -31,7 +31,6 @@ const MobileMenu = () => {
           <Link href="/">Friends</Link>
           <Link href="/">Groups</Link>
           <Link href="/">Stories</Link>
-          <Link href="/">Login</Link>
         </div>
       )}
     </div>
