@@ -68,7 +68,7 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-2 text-sm">
           <Image src="/login.webp" alt="Login" width={20} height={20} />
-          <Link href="/sign-in">Login/Register</Link>
+          <Link href="/signIn">Login/Register</Link>
         </div>
         <MobileMenu />
       </div>
