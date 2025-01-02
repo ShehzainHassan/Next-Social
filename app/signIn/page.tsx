@@ -1,10 +1,5 @@
 "use client";
-import {
-  getUserDetails,
-  loginUser,
-  loginUserAction,
-} from "@/actions/auth-actions";
-import { setTokenCookie } from "@/utils/commonMethods";
+import { loginUser, loginUserAction } from "@/actions/auth-actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,7 +10,6 @@ export default function SignIn() {
     password: "",
   });
   const [invalidCredentials, setInvalidCredentials] = useState("");
-  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,8 +23,6 @@ export default function SignIn() {
       if (data === "Invalid Credentials") {
         setInvalidCredentials("Invalid Credentials");
       } else {
-        const _token = await setTokenCookie(data.token);
-        setToken(_token);
         router.push("/");
       }
     }

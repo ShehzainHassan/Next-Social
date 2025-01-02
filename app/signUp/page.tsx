@@ -1,6 +1,5 @@
 "use client";
 import { createUser, registerUserAction } from "@/actions/auth-actions";
-import { setTokenCookie } from "@/utils/commonMethods";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,7 +10,6 @@ export default function SignUp() {
     email: "",
     password: "",
   });
-  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,8 +21,6 @@ export default function SignUp() {
     } else {
       const data = await createUser(formData);
       if (data) {
-        const _token = await setTokenCookie(data.token);
-        setToken(_token);
         router.push("/");
       }
     }
