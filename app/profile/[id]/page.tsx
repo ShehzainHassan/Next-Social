@@ -1,6 +1,6 @@
 import Feed from "@/components/Feed";
-import LeftMenu from "@/components/LeftMenu";
-import RightMenu from "@/components/RightMenu";
+import LeftMenu from "@/components/LeftMenu/LeftMenu";
+import RightMenu from "@/components/RightMenu/RightMenu";
 import Image from "next/image";
 
 const ProfilePage = () => {

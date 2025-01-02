@@ -1,8 +1,8 @@
-import Ad from "./Ad";
-import Birthdays from "./Birthdays";
-import FriendRequests from "./FriendRequests";
+import Ad from "../Ad";
 import UserInfoCard from "./UserInfoCard";
 import UserMediaCard from "./UserMediaCard";
+import Birthdays from "./Birthdays";
+import FriendRequests from "./FriendRequests";
 
 type RightMenuProp = {
   userId?: string;
