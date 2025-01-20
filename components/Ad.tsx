@@ -2,8 +2,8 @@ import Image from "next/image";
 
 const Ad = ({ size }: { size: "sm" | "md" | "lg" }) => {
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md text-sm">
-      <div className="flex items-center justify-between text-gray-500 font-medium">
+    <div className="p-4 rounded-lg shadow-md dark:shadow-lg dark:shadow-gray6 text-sm">
+      <div className="flex items-center justify-between text-gray3 dark:text-gray2 font-medium">
         <span>Sponsored Ads</span>
         <Image src="/more.png" alt="" width={16} height={16} />
       </div>
@@ -28,7 +28,9 @@ const Ad = ({ size }: { size: "sm" | "md" | "lg" }) => {
             height={24}
             className="rounded-full w-6 h-6 object-cover"
           />
-          <span className="text-blue-500 font-medium">BigChef Lounge</span>
+          <span className="text-blue2 font-medium hover:text-blue4 cursor-pointer dark:text-blue5 dark:hover:text-blue1">
+            BigChef Lounge
+          </span>
         </div>
         <p className={size === "sm" ? "text-xs" : "text-sm"}>
           {size === "sm"
@@ -37,7 +39,7 @@ const Ad = ({ size }: { size: "sm" | "md" | "lg" }) => {
             ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. "
             : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit."}
         </p>
-        <button className="bg-gray-200 text-gray-500 p-2 text-xs rounded-lg">
+        <button className="bg-gray4 text-gray3 p-2 text-xs rounded-lg hover:bg-gray2 dark:bg-gray5 dark:text-gray2 dark:hover:bg-gray7">
           Learn more
         </button>
       </div>

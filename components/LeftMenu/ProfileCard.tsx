@@ -1,9 +1,15 @@
+"use client";
+import { useUser } from "@/utils/contexts/UserContext";
 import Image from "next/image";
 import Link from "next/link";
-
 const ProfileCard = () => {
+  const { user } = useUser();
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
+    <div className="p-4 rounded-lg shadow-md dark:shadow-lg dark:shadow-gray6">
       <div className="h-20 relative">
         <Image
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR132TBAD0-GhGhN8_2Xr-3obkFd4NzFbk6Hg&s"
@@ -20,7 +26,9 @@ const ProfileCard = () => {
         />
       </div>
       <div className="h-20 flex flex-col gap-2 mt-4 items-center">
-        <span className="font-semibold">Edward Gabriel May</span>
+        <span className="font-semibold">
+          {user.firstName} {user.lastName}
+        </span>
         <div className="flex items-center gap-4">
           <div className="flex">
             <Image
@@ -45,10 +53,13 @@ const ProfileCard = () => {
               className="rounded-full object-cover w-3 h-3"
             />
           </div>
-          <span className="text-xs text-gray-500">500 followers</span>
+          <span className="text-xs ">
+            <span className="font-bold">{user?.followers.length}</span>{" "}
+            followers
+          </span>
         </div>
-        <Link href="/profile/test">
-          <button className="bg-blue-500 text-white text-xs p-2 rounded-md">
+        <Link href={`/profile/${user._id}`}>
+          <button className="bg-blue2  text-white text-xs p-2 rounded-md hover:bg-blue3 dark:bg-blue4 dark:hover:bg-blue3">
             My Profile
           </button>
         </Link>

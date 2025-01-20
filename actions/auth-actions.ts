@@ -13,6 +13,9 @@ export const registerUserAction = async (formData: FormData) => {
   }
 
   const nameRegex = /^[A-Za-z]+$/;
+  if (!firstName) {
+    errors.firstName = "First name is required";
+  }
   if (firstName && !nameRegex.test(firstName.toString())) {
     errors.firstName =
       "First name must contain only letters and no special characters.";
@@ -20,8 +23,17 @@ export const registerUserAction = async (formData: FormData) => {
   if (lastName && typeof lastName === "string" && !nameRegex.test(lastName)) {
     errors.lastName = "Last name can only contain letters.";
   }
+  if (!email) {
+    errors.email = "Email is required";
+  }
 
-  if (typeof password !== "string" || password.length < 8) {
+  if (!password) {
+    errors.password = "Password is required";
+  }
+  if (
+    typeof password !== "string" ||
+    (password.length > 0 && password.length < 8)
+  ) {
     errors.password = "Password must contain at least 8 characters";
   }
   if (Object.values(errors).some((error) => error !== "")) {
@@ -35,6 +47,13 @@ export const loginUserAction = async (formData: FormData) => {
   const email = formData.get("email");
   const password = formData.get("password");
   const errors = { email: "", password: "" };
+
+  if (!email) {
+    errors.email = "Email is required";
+  }
+  if (!password) {
+    errors.password = "Password is required";
+  }
   if (typeof password !== "string" || password.length < 8) {
     errors.password = "Password must contain at least 8 characters";
   }
@@ -67,8 +86,6 @@ export const createUser = async (formData: FormData) => {
 export const loginUser = async (formData: FormData) => {
   const email = formData.get("email");
   const password = formData.get("password");
-  console.log("Email = ", email);
-  console.log("Password = ", password);
   try {
     const response = await axios.post("http://localhost:3333/auth/login", {
       email,
@@ -87,13 +104,38 @@ export const loginUser = async (formData: FormData) => {
   }
 };
 
-export const getUserDetails = async (token: string) => {
+export const getUserDetails = async (token: string | null) => {
   try {
+    if (!token) return null;
     const response = await axios.get(
       `http://localhost:3333/auth/userInfo?token=${token}`
     );
     return response.data;
   } catch (error) {
     console.log("Error fetching user info ", error);
+  }
+};
+
+export const loadUserDetailsFromID = async (userId: string) => {
+  try {
+    if (!userId) return null;
+    const response = await axios.get(
+      `http://localhost:3333/user/loadUser?userId=${userId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching user info ", error);
+  }
+};
+
+export const searchResults = async (query: string) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3333/user/searchUsers?q=${query}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching users info ", error);
   }
 };

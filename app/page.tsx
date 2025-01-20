@@ -1,10 +1,16 @@
+"use client";
+
 import AddPost from "@/components/AddPost";
-import Feed from "@/components/Feed";
+import Feed from "@/components/Feed/Feed";
 import LeftMenu from "@/components/LeftMenu/LeftMenu";
 import RightMenu from "@/components/RightMenu/RightMenu";
 import Stories from "@/components/Stories";
+import { useToken } from "@/utils/contexts/TokenContext";
+import SignIn from "./signIn/page";
 
 const Homepage = () => {
+  const { token } = useToken();
+  if (!token) return <SignIn />;
   return (
     <div className="flex gap-6 pt-6">
       <div className="hidden xl:block w-[20%]">
