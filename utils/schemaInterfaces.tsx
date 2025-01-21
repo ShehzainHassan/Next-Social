@@ -79,3 +79,10 @@ export interface Story {
   userId: string;
   img: string;
 }
+
+export interface FormErrors {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}

@@ -1,9 +1,11 @@
 "use client";
 import { loginUser, loginUserAction } from "@/actions/auth-actions";
+import { validateEmail } from "@/utils/commonMethods/methods";
 import { useToken } from "@/utils/contexts/TokenContext";
+import { FormErrors } from "@/utils/schemaInterfaces";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SignIn() {
   const { setToken } = useToken();
@@ -12,7 +14,13 @@ export default function SignIn() {
     password: "",
   });
   const [invalidCredentials, setInvalidCredentials] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [emailInteraction, setEmailInteraction] = useState(false);
+  const [passwordInteraction, setPasswordInteraction] = useState(false);
+
+  const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,6 +45,33 @@ export default function SignIn() {
     }
   };
 
+  useEffect(() => {
+    const formErrors: FormErrors = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    };
+
+    if (emailInteraction) {
+      if (!email.trim()) {
+        formErrors.email = "Email cannot be empty";
+      } else if (!validateEmail(email)) {
+        formErrors.email = "Please enter a valid email address";
+      }
+    }
+
+    if (passwordInteraction) {
+      if (!password.trim()) {
+        formErrors.password = "Password cannot be empty";
+      } else if (password.length < 8) {
+        formErrors.password = "Password must be at least 8 characters long";
+      }
+    }
+
+    setErrors(formErrors);
+  }, [email, password, emailInteraction, passwordInteraction]);
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="p-8 rounded-lg shadow-md dark:shadow-lg dark:shadow-gray6 w-full max-w-md">
@@ -54,6 +89,9 @@ export default function SignIn() {
               type="email"
               id="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmailInteraction(true)}
               placeholder="Enter your email"
               className={`w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                 invalidCredentials || errors.email
@@ -75,6 +113,9 @@ export default function SignIn() {
               type="password"
               id="password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={() => setPasswordInteraction(true)}
               placeholder="Enter your password"
               className={`w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                 invalidCredentials || errors.password

@@ -1,6 +1,8 @@
 "use client";
+import { validateEmail } from "@/utils/commonMethods/methods";
 import { useUser } from "@/utils/contexts/UserContext";
-import React, { useState } from "react";
+import { FormErrors } from "@/utils/schemaInterfaces";
+import React, { useState, useEffect } from "react";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -18,23 +20,41 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
   const [image, setImage] = useState<string | null>(null);
 
   const [errors, setErrors] = useState({
-    firstName: false,
-    email: false,
-    password: false,
+    firstName: "",
+    email: "",
+    password: "",
   });
+
+  useEffect(() => {
+    const formErrors: FormErrors = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    };
+
+    if (!firstName.trim()) {
+      formErrors.firstName = "First name cannot be empty";
+    }
+
+    if (!email.trim()) {
+      formErrors.email = "Email cannot be empty";
+    } else if (!validateEmail(email)) {
+      formErrors.email = "Please enter a valid email address";
+    }
+
+    if (!password.trim()) {
+      formErrors.password = "Password cannot be empty";
+    } else if (password.length < 8) {
+      formErrors.password = "Password must be at least 8 characters long";
+    }
+
+    setErrors(formErrors);
+  }, [firstName, email, password]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const newErrors = {
-      firstName: firstName.trim() === "",
-      email: email.trim() === "",
-      password: password.trim() === "",
-    };
-
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).some((error) => error)) {
+    if (Object.values(errors).some((error) => error)) {
       return;
     }
 
@@ -102,14 +122,14 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     className={`w-full mt-1 p-2 border ${
-                      errors.firstName ? "border-red1" : "border-gray2"
+                      errors.firstName
+                        ? "border-red1 focus:ring-red2"
+                        : "border-gray2"
                     } dark:border-gray7 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue2 dark:bg-gray5 dark:text-white`}
                     placeholder="Enter your first name"
                   />
                   {errors.firstName && (
-                    <p className="text-red1 text-sm mt-1">
-                      First name cannot be empty
-                    </p>
+                    <p className="text-red1 text-sm mt-1">{errors.firstName}</p>
                   )}
                 </div>
                 <div>
@@ -139,14 +159,14 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={`w-full mt-1 p-2 border ${
-                      errors.email ? "border-red1" : "border-gray2"
+                      errors.email
+                        ? "border-red1 focus:ring-red2"
+                        : "border-gray2"
                     } dark:border-gray7 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue2 dark:bg-gray5 dark:text-white`}
                     placeholder="Enter your email"
                   />
                   {errors.email && (
-                    <p className="text-red1 text-sm mt-1">
-                      Email cannot be empty
-                    </p>
+                    <p className="text-red1 text-sm mt-1">{errors.email}</p>
                   )}
                 </div>
                 <div>
@@ -161,14 +181,14 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className={`w-full mt-1 p-2 border ${
-                      errors.password ? "border-red1" : "border-gray2"
+                      errors.password
+                        ? "border-red1 focus:ring-red2"
+                        : "border-gray2"
                     } dark:border-gray7 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue2 dark:bg-gray5 dark:text-white`}
                     placeholder="Enter your password"
                   />
                   {errors.password && (
-                    <p className="text-red1 text-sm mt-1">
-                      Password cannot be empty
-                    </p>
+                    <p className="text-red1 text-sm mt-1">{errors.password}</p>
                   )}
                 </div>
                 <div>

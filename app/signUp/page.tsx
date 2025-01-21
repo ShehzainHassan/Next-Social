@@ -1,11 +1,23 @@
 "use client";
 import { createUser, registerUserAction } from "@/actions/auth-actions";
+import { validateEmail } from "@/utils/commonMethods/methods";
 import { useToken } from "@/utils/contexts/TokenContext";
+import { FormErrors } from "@/utils/schemaInterfaces";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function SignUp() {
   const { setToken } = useToken();
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [fNameInteraction, setFnameInteraction] = useState<boolean>(false);
+  const [lNameInteraction, setLnameInteraction] = useState<boolean>(false);
+  const [emailInteraction, setEmailInteraction] = useState<boolean>(false);
+  const [passwordInteraction, setPasswordInteraction] =
+    useState<boolean>(false);
+
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -16,6 +28,10 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFnameInteraction(true);
+    setLnameInteraction(true);
+    setEmailInteraction(true);
+    setPasswordInteraction(true);
     const formData = new FormData(e.target as HTMLFormElement);
     const response = await registerUserAction(formData);
     if (response.errors) {
@@ -28,6 +44,58 @@ export default function SignUp() {
       }
     }
   };
+
+  useEffect(() => {
+    const formErrors: FormErrors = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    };
+
+    const nameRegex = /^[A-Za-z]+$/;
+    if (fNameInteraction) {
+      if (!firstName.trim()) {
+        formErrors.firstName = "First Name cannot be empty";
+      } else if (!nameRegex.test(firstName.toString())) {
+        formErrors.firstName =
+          "First name must contain only letters and no special characters.";
+      }
+    }
+    if (lNameInteraction) {
+      if (!nameRegex.test(lastName.toString())) {
+        formErrors.lastName = "Last name can only contain letters.";
+      }
+    }
+
+    if (emailInteraction) {
+      if (!email.trim()) {
+        formErrors.email = "Email cannot be empty";
+      } else if (!validateEmail(email)) {
+        formErrors.email = "Please enter a valid email address";
+      }
+    }
+
+    if (passwordInteraction) {
+      if (!password.trim()) {
+        formErrors.password = "Password cannot be empty";
+      } else if (password.length < 8) {
+        formErrors.password = "Password must be at least 8 characters long";
+      }
+    }
+
+    setErrors(formErrors);
+  }, [
+    email,
+    password,
+    firstName,
+    lastName,
+    fNameInteraction,
+    lNameInteraction,
+    emailInteraction,
+    passwordInteraction,
+  ]);
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="p-8 rounded-lg shadow-md dark:shadow-lg dark:shadow-gray6 w-full max-w-md">
@@ -46,6 +114,9 @@ export default function SignUp() {
                 type="text"
                 id="firstName"
                 name="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                onBlur={() => setFnameInteraction(true)}
                 placeholder="Enter your first name"
                 className={`w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                   errors.firstName
@@ -67,6 +138,9 @@ export default function SignUp() {
                 type="text"
                 id="lastName"
                 name="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                onBlur={() => setLnameInteraction(true)}
                 placeholder="Enter your last name"
                 className={`w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                   errors.lastName
@@ -90,6 +164,9 @@ export default function SignUp() {
               type="email"
               id="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmailInteraction(true)}
               placeholder="Enter your email"
               className={`w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                 errors.email
@@ -112,6 +189,9 @@ export default function SignUp() {
               type="password"
               id="password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={() => setPasswordInteraction(true)}
               placeholder="Enter your password"
               className={`w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                 errors.password
